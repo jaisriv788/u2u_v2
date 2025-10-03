@@ -1,0 +1,48 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* Remove arrows in Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove arrows in Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+::selection {
+  background-color: #38c66c;
+  color: #ffffff;
+}
+
+.glow-focus:focus {
+  outline: none;
+  border-color: #5799e4;
+  box-shadow: 0 0 10px rgba(32, 121, 229, 0.3);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.box {
+  border-radius: 36px;
+  background: #e0e0e0;
+  box-shadow: inset 14px 14px 28px #898989, inset -14px -14px 28px #ffffff;
+}

@@ -1,0 +1,29 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Landing page at root
+  RewriteRule ^$ index.html [L]
+
+  # Allow landing assets
+  RewriteCond %{REQUEST_URI} ^/assets/ [OR]
+  RewriteCond %{REQUEST_URI} ^/images/
+  RewriteRule .* - [L]
+
+  # Allow React build assets
+  RewriteCond %{REQUEST_URI} ^/app/assets/
+  RewriteRule .* - [L]
+
+  # React SPA routes -> react_index.html
+  RewriteCond %{REQUEST_URI} !^/$
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^app/(.*)$ app/react_index.html [L]``
+
+  # Redirect SPA routes without /app prefix (like /signin) → React
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ app/react_index.html [L]
+ 
+ 
+  
+</IfModule>

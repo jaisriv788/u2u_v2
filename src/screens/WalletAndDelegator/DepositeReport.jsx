@@ -30,7 +30,7 @@ function DepositeReport() {
               },
             }
           );
-          // console.log(response.data.data.logs);
+          console.log(response.data.data.logs);
           if (response.data.status === 200) {
             setData(response.data.data.logs);
             setFilteredData(response.data.data.logs);
@@ -143,6 +143,7 @@ function DepositeReport() {
                 <th>Created On</th>
                 <th>Transaction Id</th>
                 <th>Hash</th>
+                <th>Image</th>
                 <th>Amount</th>
                 <th>Action</th>
                 <th>Status</th>
@@ -174,6 +175,21 @@ function DepositeReport() {
                     </td>
                     <td className="text-nowrap">{item.trans_id}</td>
                     <td className="text-nowrap">{item.transaction_hash}</td>
+                    <td className="text-nowrap">
+                      {item.proof_of_payment ? (
+                        <a
+                          href={item.proof_of_payment}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-400 underline hover:text-green-300"
+                        >
+                          View Proof
+                        </a>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+
                     <td className="text-nowrap">{item.amount}</td>
                     <td className="text-nowrap">
                       <span className="bg-[#41C3A9] px-2 py-1 rounded text-white">

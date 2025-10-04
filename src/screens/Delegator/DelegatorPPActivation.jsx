@@ -138,7 +138,7 @@ function DelegatorPPActivation() {
                 onClick={() =>
                   naviagte("/buypackage", { state: { package: item } })
                 }
-                disabled
+                // disabled
                 className=" mx-auto mb-3 bg-[#38C66C] cursor-pointer py-0.5 px-3 rounded hover:bg-[#59b87b]"
               >
                 Activate Now

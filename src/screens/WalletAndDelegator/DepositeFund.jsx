@@ -209,7 +209,7 @@ function DepositeFund() {
       }
     } catch (err) {
       console.error("Transaction failed!", err);
-      showError("Tranaction Failed!");
+      showError(err.response.data.msg);
     } finally {
       setDisableSubmit(false);
       setAmount("");

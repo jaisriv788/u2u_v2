@@ -256,7 +256,8 @@ function DepositeFund() {
             {walletAddress ? (
               <button
                 onClick={handleSubmit}
-                disabled={disableSubmit}
+                disabled
+                // disabled={disableSubmit}
                 className="bg-[#22b357] disabled:cursor-not-allowed hover:bg-[#56CF82] transition ease-in-out duration-300 cursor-pointer px-3 py-0.5 rounded w-fit mt-3"
               >
                 {disableSubmit ? "Depositing..." : "Submit"}
@@ -264,7 +265,8 @@ function DepositeFund() {
             ) : (
               <button
                 onClick={connectWallet}
-                disabled={disableSubmit}
+                disabled
+                // disabled={disableSubmit}
                 className="bg-[#22b357] disabled:cursor-not-allowed hover:bg-[#56CF82] transition ease-in-out duration-300 cursor-pointer px-3 py-0.5 rounded w-fit mt-3"
               >
                 {disableSubmit ? "Connecting..." : "Connect Wallet"}

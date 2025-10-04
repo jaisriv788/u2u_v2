@@ -50,6 +50,7 @@ import DepositeFund from "./screens/WalletAndDelegator/DepositeFund";
 import DepositeReport from "./screens/WalletAndDelegator/DepositeReport";
 import Withdraw from "./screens/WalletAndDelegator/Withdraw";
 import WithdrawReport from "./screens/WalletAndDelegator/WithdrawReport";
+import DepositeBackup from "./screens/WalletAndDelegator/DepositeBackup";
 
 //----------------------------------------------------------------------
 //Component imports
@@ -200,6 +201,7 @@ function App() {
           <Route path="/delegateusdtbep20" element={<Delegate />} />
           <Route path="/delegatorreport" element={<DelegatorReport />} />
           <Route path="/depositefund" element={<DepositeFund />} />
+          {/* <Route path="/depositebackupone" element={<DepositeBackup />} /> */}
           <Route path="/depositerport" element={<DepositeReport />} />
           <Route path="/withdraw" element={<Withdraw />} />
           <Route path="/withdrawreport" element={<WithdrawReport />} />

@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
 import useConstStore from "../../store/constStore";
 import useUserStore from "../../store/userStore";
+import Web3 from "web3";
+import erc20Abi from "../../erc20Abi.json";
+import contractAbi from "../../contractAbi.json";
 import axios from "axios";
-import { FaCopy } from "react-icons/fa";
 
 function DepositeFund() {
+  const options = ["USDT-BEP20"];
+
+  const [option, setOption] = useState("USDT-BEP20");
   const [amount, setAmount] = useState("");
-  const [hash, setHash] = useState("");
-  const [file, setFile] = useState(null);
   const [disableSubmit, setDisableSubmit] = useState(false);
 
   const {
     baseUrl,
+    usdtAddress,
+    contractAddress,
     walletAddress,
     setWalletAddress,
     setMsg,
@@ -38,14 +43,6 @@ function DepositeFund() {
       setShowSuccess(false);
     }, 7000);
   }
-
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]; // get the first selected file
-    if (selectedFile) {
-      setFile(selectedFile);
-      console.log("Selected file:", selectedFile);
-    }
-  };
 
   useEffect(() => {
     const connectWallet = async () => {
@@ -87,9 +84,6 @@ function DepositeFund() {
         window.ethereum.on("accountsChanged", (acc) => {
           setWalletAddress(acc[0] || null);
         });
-        alert(
-          "Copy the address, Send the payment and then make the request to the admin to update your balance and amount must be greater than 1."
-        );
       } catch (err) {
         if (err.code === -32002) {
           console.error(
@@ -170,51 +164,65 @@ function DepositeFund() {
       showError("Amount Can Not Be Less Than 1.");
       return;
     }
-    if (!hash) {
-      showError("Enter a valid transaction hash.");
-      return;
-    }
-    if (!file) {
-      showError("Select Image As Proof Of Transaction.");
-      return;
-    }
 
+    if (!window.ethereum) {
+      showError("Please install MetaMask!");
+      return;
+    }
     try {
       setDisableSubmit(true);
 
-      console.log({ amount, hash, file });
+      const web3 = new Web3(window.ethereum);
+
+      const chainId = await web3.eth.getChainId();
+      console.log(chainId.toString());
+
+      if (chainId.toString() != 56) {
+        showError("Please switch to Binance Smart Chain!");
+        return;
+      }
+
+      const amountInWei = web3.utils.toWei(amount.toString(), "ether");
+
+      const usdt = new web3.eth.Contract(erc20Abi, usdtAddress);
+
+      await usdt.methods
+        .approve(contractAddress, amountInWei.toString())
+        .send({ from: walletAddress });
+
+      const contract = new web3.eth.Contract(contractAbi, contractAddress);
+
+      const receipt = await contract.methods
+        .deposit(amountInWei)
+        .send({ from: walletAddress });
+
+      console.log("Deposit confirmed ✅", receipt);
+
       const response = await axios.post(
         `${baseUrl}depositUsdtFund`,
         {
           user_id: user?.id,
           amount,
-          method: "USDT-BEP20",
-          transaction_id: hash,
-          proof_of_payment: file,
+          method: option,
+          transaction_id: receipt.transactionHash,
         },
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      console.log(response.data);
-      if (response.data.status == 200) {
-        console.log("API updated successfully");
-        showSuccess("Transaction confirmed.");
-      } else {
-        showError(response.data.msg);
-      }
+      console.log(response);
+
+      console.log("API updated successfully");
+      showSuccess("Transaction confirmed ✅");
     } catch (err) {
       console.error("Transaction failed!", err);
       showError("Tranaction Failed!");
     } finally {
       setDisableSubmit(false);
-      setAmount("");
-      setHash("");
-      setFile(null);
     }
   }
 
@@ -225,25 +233,6 @@ function DepositeFund() {
           Deposit{" "}
         </div>
         <div className="py-5 px-5 flex flex-col gap-3 text-sm">
-          <div className="flex gap-3 items-center relative">
-            <span>Wallet Address -</span>
-            <span>0x2Cbff126427A1a099e21135BF16f4f88a5dE786e</span>
-            <FaCopy
-              onClick={() => {
-                navigator.clipboard
-                  .writeText("0x2Cbff126427A1a099e21135BF16f4f88a5dE786e")
-                  .then(() => {
-                    console.log("Text copied to clipboard ✅");
-                    alert("Copied!");
-                  })
-                  .catch((err) => {
-                    console.error("Failed to copy: ", err);
-                  });
-              }}
-              className="cursor-pointer hover:text-gray-300 transition ease-in-out duration-300"
-            />
-          </div>
-
           <div className="flex flex-col relative">
             <span>Enter Amount</span>
             <input
@@ -256,24 +245,19 @@ function DepositeFund() {
           </div>
 
           <div className="flex flex-col">
-            <span className="">Transaction Hash</span>
-            <input
-              onChange={(e) => setHash(e.target.value)}
-              value={hash}
-              type="text"
-              placeholder="Enter Tx Hash"
-              className="bg-[#26362C] rounded px-3 py-0.5 pr-10"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <span className="">Transaction Hash</span>
-            <input
-              onChange={handleFileChange}
-              accept="image/*"
-              type="file"
-              className="bg-[#26362C] rounded px-3 py-0.5 pr-10"
-            />
+            <span className="">Country</span>
+            <select
+              value={option}
+              onChange={(e) => setOption(e.target.value)}
+              required
+              className="rounded bg-[#26362C] px-3 py-0.5"
+            >
+              {options?.map((item, index) => (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex gap-5 mt-5">

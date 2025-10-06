@@ -225,7 +225,27 @@ function DepositeFund() {
           Deposit{" "}
         </div>
         <div className="py-5 px-5 flex flex-col gap-3 text-sm">
-          <div className="flex sm:gap-3 flex-col sm:flex-row sm:items-center relative">
+          <div className="flex gap-3 items-center relative">
+            <span>Wallet Address -</span>
+            <span className="hidden sm:block">0x2Cbff126427A1a099e21135BF16f4f88a5dE786e</span>
+            <span className="sm:hidden block">0x2Cbff12..8a5dE786e</span>
+            <FaCopy
+              onClick={() => {
+                navigator.clipboard
+                  .writeText("0x2Cbff126427A1a099e21135BF16f4f88a5dE786e")
+                  .then(() => {
+                    console.log("Text copied to clipboard ✅");
+                    alert("Copied!");
+                  })
+                  .catch((err) => {
+                    console.error("Failed to copy: ", err);
+                  });
+              }}
+              className="cursor-pointer hover:text-gray-300 transition ease-in-out duration-300"
+            />
+          </div>
+
+          {/* <div className="flex sm:gap-3 flex-col sm:flex-row sm:items-center relative">
             <span>Wallet Address -</span>
             <div className="flex items-center gap-2">
               <span>0x2Cbff126427A1a099e21135BF16f4f88a5dE786e</span>
@@ -244,7 +264,7 @@ function DepositeFund() {
                 className="cursor-pointer hover:text-gray-300 transition ease-in-out duration-300"
               />
             </div>
-          </div>
+          </div> */}
 
           <div className="flex flex-col relative">
             <span>Enter Amount</span>

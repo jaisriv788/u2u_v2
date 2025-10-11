@@ -10,10 +10,6 @@ import {
   FaWallet,
 } from "react-icons/fa6";
 import { GiCash } from "react-icons/gi";
-import { BiSupport } from "react-icons/bi";
-import pdfOne from "../assets/pdf/u2u.pdf";
-import pdfTwo from "../assets/pdf/phone.pdf";
-import pdfThree from "../assets/pdf/node.pdf";
 
 export const sidebarLinkData = [
   { id: 1, title: "Dashboard", icon: SlScreenDesktop, path: "/dashboard" },
@@ -230,9 +226,9 @@ export const sidebarLinkData = [
     title: "Download Pitch Deck",
     icon: FaWallet,
     subRoute: [
-      { id: 111, title: "Validator Pitchdeck", icon: GoDotFill, link: pdfOne },
-      { id: 112, title: "UPhone Pitchdeck", icon: GoDotFill, link: pdfTwo },
-      { id: 113, title: "Node Pitchdeck", icon: GoDotFill, link: pdfThree },
+      { id: 111, title: "Validator Pitchdeck", icon: GoDotFill, link: "/app/u2u.pdf" },
+      { id: 112, title: "UPhone Pitchdeck", icon: GoDotFill, link: "/app/phone.pdf" },
+      { id: 113, title: "Node Pitchdeck", icon: GoDotFill, link: "/app/node.pdf" },
     ],
   },
   // { id: 12, title: "Support", icon: BiSupport, path: "/support" },

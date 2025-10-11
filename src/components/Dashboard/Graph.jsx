@@ -1,16 +1,18 @@
+import React, { Suspense } from "react";
 import { RiCoinFill } from "react-icons/ri";
 import { IoIosSettings } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
 import { GiChessQueen } from "react-icons/gi";
 import { FaBuilding } from "react-icons/fa";
+import Loader from "../common/Loader";
 import useDashboardStore from "../../store/dashboardStore";
-import Chart from "react-apexcharts";
+const Chart = React.lazy(() => import("react-apexcharts"));
 
 function Graph() {
   const { dashboardData } = useDashboardStore();
 
   if (!dashboardData) {
-    return null;
+    return <Loader />;
   }
 
   const series = [dashboardData?.daily_profit, dashboardData?.pending_roi];
@@ -161,7 +163,14 @@ function Graph() {
           </div>
           <div className="flex-1 flex items-center justify-center">
             {" "}
-            <Chart options={options} series={series} type="donut" width="280" />
+            <Suspense fallback={<Loader />}>
+              <Chart
+                options={options}
+                series={series}
+                type="donut"
+                width="280"
+              />
+            </Suspense>
           </div>
         </div>
       </div>
@@ -192,12 +201,14 @@ function Graph() {
           </div>
           <div className="flex items-center justify-center flex-1">
             {" "}
-            <Chart
-              options={options1}
-              series={series1}
-              type="donut"
-              width="280"
-            />
+            <Suspense fallback={<Loader />}>
+              <Chart
+                options={options1}
+                series={series1}
+                type="donut"
+                width="280"
+              />
+            </Suspense>
           </div>
         </div>
       </div>

@@ -1,19 +1,24 @@
-import { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import useUserStore from "../store/userStore";
 import useConstStore from "../store/constStore";
 import useDashboardStore from "../store/dashboardStore";
 import axios from "axios";
 // import Marquee from "../components/Dashboard/Marquee";
 import Intro from "../components/Dashboard/Intro";
-import Card from "../components/Dashboard/Card";
+import Loader from "../components/common/Loader";
 import { FaWallet } from "react-icons/fa";
-import Graph from "../components/Dashboard/Graph";
-import DetailedCards from "../components/Dashboard/DetailedCards";
-import Link from "../components/Dashboard/Link";
-import Img from "../components/Dashboard/Img";
-import YouTube from "../components/Dashboard/YouTube";
-import Transaction from "../components/Dashboard/Transaction";
-import Footer from "../components/common/Footer";
+const Card = React.lazy(() => import("../components/Dashboard/Card"));
+const Graph = React.lazy(() => import("../components/Dashboard/Graph"));
+const DetailedCards = React.lazy(() =>
+  import("../components/Dashboard/DetailedCards")
+);
+const Link = React.lazy(() => import("../components/Dashboard/Link"));
+const Img = React.lazy(() => import("../components/Dashboard/Img"));
+const YouTube = React.lazy(() => import("../components/Dashboard/YouTube"));
+const Transaction = React.lazy(() =>
+  import("../components/Dashboard/Transaction")
+);
+const Footer = React.lazy(() => import("../components/common/Footer"));
 
 function Dashboard() {
   const { user, isConnected, token } = useUserStore();
@@ -187,36 +192,59 @@ function Dashboard() {
       )}
       {/* <Marquee /> */}
       <Intro />
-      <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-5">
-        {Data.map((item, index) => (
-          <Card
-            key={index}
-            icon={item.icon}
-            title={item.title}
-            balance={item.balance}
-            show={item.show}
-          />
-        ))}
-      </div>
-      <Graph />
-      <div className="grid lg:grid-cols-2 gap-3 sm:gap-5">
-        {Data2.map((item, index) => (
-          <DetailedCards
-            key={index}
-            title={item.title}
-            amount={item.amount}
-            show={item.showBtn}
-            balanceRoi={item.balanceRoi}
-          >
-            {item.tag}
-          </DetailedCards>
-        ))}
-      </div>
-      <Link />
-      <Img />
-      <YouTube />
-      <Transaction />
-      <Footer />
+      <Suspense fallback={<Loader />}>
+        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-5">
+          {Data.map((item, index) => (
+            <Card
+              key={index}
+              icon={item.icon}
+              title={item.title}
+              balance={item.balance}
+              show={item.show}
+            />
+          ))}
+        </div>
+      </Suspense>
+
+      <Suspense fallback={<Loader />}>
+        <Graph />
+      </Suspense>
+
+      <Suspense fallback={<Loader />}>
+        <div className="grid lg:grid-cols-2 gap-3 sm:gap-5">
+          {Data2.map((item, index) => (
+            <DetailedCards
+              key={index}
+              title={item.title}
+              amount={item.amount}
+              show={item.showBtn}
+              balanceRoi={item.balanceRoi}
+            >
+              {item.tag}
+            </DetailedCards>
+          ))}
+        </div>
+      </Suspense>
+
+      <Suspense fallback={<Loader />}>
+        <Link />
+      </Suspense>
+
+      <Suspense fallback={<Loader />}>
+        <Img />
+      </Suspense>
+
+      <Suspense fallback={<Loader />}>
+        <YouTube />
+      </Suspense>
+
+      <Suspense fallback={<Loader />}>
+        <Transaction />
+      </Suspense>
+
+      <Suspense fallback={<Loader />}>
+        <Footer />
+      </Suspense>
     </div>
   );
 }

@@ -346,7 +346,7 @@ function PromoPackHistory() {
                 <th>UserId</th>
                 <th>Package</th>
                 <th>Action</th>
-                <th>Claim Reward</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -419,9 +419,9 @@ function PromoPackHistory() {
                             "_"
                           )
                         }
-                        className="flex items-center gap-2 cursor-pointer hover:text-gray-400 transition ease-in-out duration-300"
+                        className="flex items-center gap-2 cursor-pointer hover:text-gray-400 transition ease-in-out duration-300 text-nowrap"
                       >
-                        Claim <FaExternalLinkAlt />
+                        Claim Reward <FaExternalLinkAlt />
                       </td>
                     </tr>
 

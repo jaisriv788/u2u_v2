@@ -1,4 +1,5 @@
 //normal imports
+import React, { Suspense } from "react";
 import { Route, Routes } from "react-router";
 import useConstStore from "./store/constStore";
 //----------------------------------------------------------------------
@@ -6,51 +7,83 @@ import useConstStore from "./store/constStore";
 //screens imports
 //main screens
 // import Landing from "./screens/Landing";
-import Signin from "./screens/Signin";
-import Signup from "./screens/Signup";
-import Dashboard from "./screens/Dashboard";
-import PNF from "./screens/PNF";
+const Signin = React.lazy(() => import("./screens/Signin"));
+const Signup = React.lazy(() => import("./screens/Signup"));
+const Dashboard = React.lazy(() => import("./screens/Dashboard"));
+const PNF = React.lazy(() => import("./screens/PNF"));
 // import Support from "./screens/Support";
-import ForgetPassword from "./screens/ForgetPassword";
-import ResetPassword from "./screens/ResetPassword";
-import Chat from "./components/Support/Chat";
-import Invoice from "./components/common/Invoice";
-import BuyPackage from "./screens/Delegator/BuyPackage";
+const ForgetPassword = React.lazy(() => import("./screens/ForgetPassword"));
+const ResetPassword = React.lazy(() => import("./screens/ResetPassword"));
+const Chat = React.lazy(() => import("./components/Support/Chat"));
+const Invoice = React.lazy(() => import("./components/common/Invoice"));
+const BuyPackage = React.lazy(() => import("./screens/Delegator/BuyPackage"));
 
 //authentication screens
-import Profile from "./screens/Authentication/Profile";
-import LoginPassword from "./screens/Authentication/LoginPassword";
-import TwoFA from "./screens/TwoFA";
+const Profile = React.lazy(() => import("./screens/Authentication/Profile"));
+const LoginPassword = React.lazy(() =>
+  import("./screens/Authentication/LoginPassword")
+);
+const TwoFA = React.lazy(() => import("./screens/TwoFA"));
 
 //network screens
-import MyDirect from "./screens/Network/MyDirect";
-import TeamNetwork from "./screens/Network/TeamNetwork";
-import LevelVolume from "./screens/Network/LevelVolume";
-import RankVolume from "./screens/Network/RankVolume";
-import DirectTeamDetails from "./screens/Network/DirectTeamDetails";
-import MyDirectTeam from "./screens/Network/MyDirectTeam";
-import ActiveUserDetails from "./screens/Network/ActiveUserDetails";
-import AmountDetail from "./screens/Network/AmountDetail";
+const MyDirect = React.lazy(() => import("./screens/Network/MyDirect"));
+const TeamNetwork = React.lazy(() => import("./screens/Network/TeamNetwork"));
+const LevelVolume = React.lazy(() => import("./screens/Network/LevelVolume"));
+const RankVolume = React.lazy(() => import("./screens/Network/RankVolume"));
+const DirectTeamDetails = React.lazy(() =>
+  import("./screens/Network/DirectTeamDetails")
+);
+const MyDirectTeam = React.lazy(() => import("./screens/Network/MyDirectTeam"));
+const ActiveUserDetails = React.lazy(() =>
+  import("./screens/Network/ActiveUserDetails")
+);
+const AmountDetail = React.lazy(() => import("./screens/Network/AmountDetail"));
 
 //income screens
-import DailyDelegatorReward from "./screens/Income/DailyDelegatorReward";
-import DirectBonus from "./screens/Income/DirectBonus";
-import DelegatorLevelBonus from "./screens/Income/DelegatorLevelBonus";
-import RankAndRewards from "./screens/Income/RankAndRewards";
+const DailyDelegatorReward = React.lazy(() =>
+  import("./screens/Income/DailyDelegatorReward")
+);
+const DirectBonus = React.lazy(() => import("./screens/Income/DirectBonus"));
+const DelegatorLevelBonus = React.lazy(() =>
+  import("./screens/Income/DelegatorLevelBonus")
+);
+const RankAndRewards = React.lazy(() =>
+  import("./screens/Income/RankAndRewards")
+);
 
 //delegator screens
-import DelegatorPPActivation from "./screens/Delegator/DelegatorPPActivation";
-import PromoPackHistory from "./screens/Delegator/PromoPackHistory";
-import VerificationofNode from "./screens/Delegator/VerificationofNode";
+const DelegatorPPActivation = React.lazy(() =>
+  import("./screens/Delegator/DelegatorPPActivation")
+);
+const PromoPackHistory = React.lazy(() =>
+  import("./screens/Delegator/PromoPackHistory")
+);
+const VerificationofNode = React.lazy(() =>
+  import("./screens/Delegator/VerificationofNode")
+);
 
 // deposit & withdraw screens
-import Delegate from "./screens/WalletAndDelegator/Delegate";
-import DelegatorReport from "./screens/WalletAndDelegator/DelegatorReport";
-import DepositeFund from "./screens/WalletAndDelegator/DepositeFund";
-import DepositeReport from "./screens/WalletAndDelegator/DepositeReport";
-import Withdraw from "./screens/WalletAndDelegator/Withdraw";
-import WithdrawReport from "./screens/WalletAndDelegator/WithdrawReport";
-import DepositeBackup from "./screens/WalletAndDelegator/DepositeBackup";
+const Delegate = React.lazy(() =>
+  import("./screens/WalletAndDelegator/Delegate")
+);
+const DelegatorReport = React.lazy(() =>
+  import("./screens/WalletAndDelegator/DelegatorReport")
+);
+const DepositeFund = React.lazy(() =>
+  import("./screens/WalletAndDelegator/DepositeFund")
+);
+const DepositeReport = React.lazy(() =>
+  import("./screens/WalletAndDelegator/DepositeReport")
+);
+const Withdraw = React.lazy(() =>
+  import("./screens/WalletAndDelegator/Withdraw")
+);
+const WithdrawReport = React.lazy(() =>
+  import("./screens/WalletAndDelegator/WithdrawReport")
+);
+const DepositeBackup = React.lazy(() =>
+  import("./screens/WalletAndDelegator/DepositeBackup")
+);
 
 //----------------------------------------------------------------------
 //Component imports
@@ -143,71 +176,76 @@ function App() {
           <span>{msg}</span>
         </div>
       )}
-      <Routes>
-        {/*public route*/}
-        <Route element={<PublicRoute />}>
-          {/* <Route path="/" element={<Landing />} /> */}
-          <Route path="/signin" element={<Signin />} />
-          <Route path="/register" element={<Signup />} />
-          <Route path="/forgetpassword" element={<ForgetPassword />} />
-          <Route path="/resetpassword/:token" element={<ResetPassword />} />
-          <Route path="/register/:referralId?" element={<Signup />} />
-        </Route>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          {/*public route*/}
+          <Route element={<PublicRoute />}>
+            {/* <Route path="/" element={<Landing />} /> */}
+            <Route path="/signin" element={<Signin />} />
+            <Route path="/register" element={<Signup />} />
+            <Route path="/forgetpassword" element={<ForgetPassword />} />
+            <Route path="/resetpassword/:token" element={<ResetPassword />} />
+            <Route path="/register/:referralId?" element={<Signup />} />
+          </Route>
 
-        {/*private route*/}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/support" element={<Support />} /> */}
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/invoice" element={<Invoice />} />
+          {/*private route*/}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            {/* <Route path="/support" element={<Support />} /> */}
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/invoice" element={<Invoice />} />
 
-          {/*authentication route*/}
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/loginpassword" element={<LoginPassword />} />
-          <Route path="/twofa" element={<TwoFA />} />
+            {/*authentication route*/}
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/loginpassword" element={<LoginPassword />} />
+            <Route path="/twofa" element={<TwoFA />} />
 
-          {/*network route*/}
-          <Route path="/mydirect" element={<MyDirect />} />
-          <Route path="/teamnetwork" element={<TeamNetwork />} />
-          <Route path="/levelvolume" element={<LevelVolume />} />
-          <Route path="/rankvolume" element={<RankVolume />} />
-          <Route path="/directteamdetails" element={<DirectTeamDetails />} />
-          <Route path="/mydirectteam" element={<MyDirectTeam />} />
-          <Route path="/activeuserdetails" element={<ActiveUserDetails />} />
-          <Route path="/amountdetail" element={<AmountDetail />} />
+            {/*network route*/}
+            <Route path="/mydirect" element={<MyDirect />} />
+            <Route path="/teamnetwork" element={<TeamNetwork />} />
+            <Route path="/levelvolume" element={<LevelVolume />} />
+            <Route path="/rankvolume" element={<RankVolume />} />
+            <Route path="/directteamdetails" element={<DirectTeamDetails />} />
+            <Route path="/mydirectteam" element={<MyDirectTeam />} />
+            <Route path="/activeuserdetails" element={<ActiveUserDetails />} />
+            <Route path="/amountdetail" element={<AmountDetail />} />
 
-          {/*income route*/}
-          <Route
-            path="/dailydelegatorreward"
-            element={<DailyDelegatorReward />}
-          />
-          <Route path="/directbonus" element={<DirectBonus />} />
-          <Route
-            path="/delegatorlevelbonus"
-            element={<DelegatorLevelBonus />}
-          />
-          <Route path="/rank&reward" element={<RankAndRewards />} />
+            {/*income route*/}
+            <Route
+              path="/dailydelegatorreward"
+              element={<DailyDelegatorReward />}
+            />
+            <Route path="/directbonus" element={<DirectBonus />} />
+            <Route
+              path="/delegatorlevelbonus"
+              element={<DelegatorLevelBonus />}
+            />
+            <Route path="/rank&reward" element={<RankAndRewards />} />
 
-          {/*delegator route*/}
-          <Route
-            path="/delegatorppactivation"
-            element={<DelegatorPPActivation />}
-          />
-          <Route path="/promopackhistory" element={<PromoPackHistory />} />
-          <Route path="/verificationofnode" element={<VerificationofNode />} />
-          <Route path="/buypackage" element={<BuyPackage />} />
+            {/*delegator route*/}
+            <Route
+              path="/delegatorppactivation"
+              element={<DelegatorPPActivation />}
+            />
+            <Route path="/promopackhistory" element={<PromoPackHistory />} />
+            <Route
+              path="/verificationofnode"
+              element={<VerificationofNode />}
+            />
+            <Route path="/buypackage" element={<BuyPackage />} />
 
-          {/*wallet & delegator route*/}
-          <Route path="/delegateusdtbep20" element={<Delegate />} />
-          <Route path="/delegatorreport" element={<DelegatorReport />} />
-          <Route path="/depositebackupone" element={<DepositeFund />} />
-          <Route path="/depositefund" element={<DepositeBackup />} />
-          <Route path="/depositerport" element={<DepositeReport />} />
-          <Route path="/withdraw" element={<Withdraw />} />
-          <Route path="/withdrawreport" element={<WithdrawReport />} />
-        </Route>
-        <Route path="*" element={<PNF />} />
-      </Routes>
+            {/*wallet & delegator route*/}
+            <Route path="/delegateusdtbep20" element={<Delegate />} />
+            <Route path="/delegatorreport" element={<DelegatorReport />} />
+            <Route path="/depositebackupone" element={<DepositeFund />} />
+            <Route path="/depositefund" element={<DepositeBackup />} />
+            <Route path="/depositerport" element={<DepositeReport />} />
+            <Route path="/withdraw" element={<Withdraw />} />
+            <Route path="/withdrawreport" element={<WithdrawReport />} />
+          </Route>
+          <Route path="*" element={<PNF />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }

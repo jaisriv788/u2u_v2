@@ -1,10 +1,12 @@
+import React, { Suspense } from "react";
+import Loader from "../common/Loader";
 import { FaCopyright, FaFacebook } from "react-icons/fa";
 import QRCode from "react-qr-code";
 import useUserStore from "../../store/userStore";
 import { FaWhatsapp } from "react-icons/fa";
 import { FaInbox } from "react-icons/fa";
 import useDashboardStore from "../../store/dashboardStore";
-import Chart from "react-apexcharts";
+const Chart = React.lazy(() => import("react-apexcharts"));
 
 function Link() {
   const { user } = useUserStore();
@@ -162,12 +164,14 @@ function Link() {
           <FaInbox /> INCOME CAPPING - ( 2.4X ) OR ( 4.5X )
         </div>
 
-        <Chart
-          options={options}
-          series={series}
-          type="radialBar"
-          height={180}
-        />
+        <Suspense fallback={<Loader />}>
+          <Chart
+            options={options}
+            series={series}
+            type="radialBar"
+            height={180}
+          />
+        </Suspense>
       </div>
     </div>
   );

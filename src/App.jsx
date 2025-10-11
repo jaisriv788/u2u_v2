@@ -200,8 +200,8 @@ function App() {
           {/*wallet & delegator route*/}
           <Route path="/delegateusdtbep20" element={<Delegate />} />
           <Route path="/delegatorreport" element={<DelegatorReport />} />
-          <Route path="/depositefund" element={<DepositeFund />} />
-          <Route path="/depositebackupone" element={<DepositeBackup />} />
+          <Route path="/depositebackupone" element={<DepositeFund />} />
+          <Route path="/depositefund" element={<DepositeBackup />} />
           <Route path="/depositerport" element={<DepositeReport />} />
           <Route path="/withdraw" element={<Withdraw />} />
           <Route path="/withdrawreport" element={<WithdrawReport />} />

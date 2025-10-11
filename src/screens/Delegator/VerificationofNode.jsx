@@ -7,6 +7,7 @@ import { TiTick } from "react-icons/ti";
 import Web3 from "web3";
 import erc20Abi from "../../erc20Abi.json";
 import contractAbi from "../../contractAbi.json";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 function PromoPackHistory() {
   const [data, setData] = useState([]);
@@ -345,6 +346,7 @@ function PromoPackHistory() {
                 <th>UserId</th>
                 <th>Package</th>
                 <th>Action</th>
+                <th>Claim Reward</th>
               </tr>
             </thead>
             <tbody>
@@ -409,6 +411,17 @@ function PromoPackHistory() {
                               : "Verify"}
                           </button>
                         )}
+                      </td>
+                      <td
+                        onClick={() =>
+                          window.open(
+                            "https://node.u2uglobal.xyz/userLogin",
+                            "_"
+                          )
+                        }
+                        className="flex items-center gap-2 cursor-pointer hover:text-gray-400 transition ease-in-out duration-300"
+                      >
+                        Claim <FaExternalLinkAlt />
                       </td>
                     </tr>
 

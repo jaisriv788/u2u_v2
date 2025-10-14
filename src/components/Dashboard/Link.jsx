@@ -15,7 +15,7 @@ function Link() {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(
-        `https://u2uglobal.xyz/register/${user?.username}`
+        `https://u2uglobal.xyz/register/${user?.wallet_address_main}`
       );
       alert("Copied to clipboard!");
     } catch (err) {
@@ -23,7 +23,7 @@ function Link() {
     }
   };
 
-  const text = `https://u2uglobal.xyz/register/${user?.username}`;
+  const text = `https://u2uglobal.xyz/register/${user?.wallet_address_main}`;
 
   const options = {
     chart: {
@@ -115,7 +115,7 @@ function Link() {
 
           <div className="text-sm text-white break-words">
             https://u2uglobal.xyz/register/
-            {user?.username}
+            {user?.wallet_address_main}
           </div>
 
           <div className="flex justify-center sm:justify-start gap-3 mt-5 text-white">

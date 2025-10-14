@@ -3,28 +3,29 @@ import { Link, useNavigate, useParams } from "react-router";
 import axios from "axios";
 import useConstStore from "../store/constStore";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+
 function Signup() {
   const { referralId: referralIdParam } = useParams();
   const [referralLocked, setReferralLocked] = useState(false);
   const [referralId, setReferralId] = useState("");
 
   const [debouncedReferralId, setDebouncedReferralId] = useState(referralId);
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
-  const [country, setCountry] = useState("");
-  const [countries, setCountries] = useState(null);
-  const [number, setNumber] = useState("");
+  // const [country, setCountry] = useState("");
+  // const [countries, setCountries] = useState(null);
+  // const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // const [password, setPassword] = useState("");
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [passwordConfirm, setPasswordConfirm] = useState("");
+  // const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userFound, setUserFound] = useState(false);
 
-  const { baseUrl, setMsg, setShowSuccess } = useConstStore();
+  const { baseUrl, setMsg, setShowSuccess, setShowError } = useConstStore();
 
   const navigate = useNavigate();
 
@@ -37,6 +38,16 @@ function Signup() {
     }, 2500);
   }
 
+  function showError(msg) {
+    setMsg(msg);
+    setShowError(true);
+    setTimeout(() => {
+      setMsg("");
+      setShowError(false);
+    }, 2500);
+  }
+
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedReferralId(referralId);
@@ -47,7 +58,7 @@ function Signup() {
 
   async function fetchUser() {
     const res = await axios.post(`${baseUrl}getuser`, {
-      username: debouncedReferralId,
+      wallet_address: debouncedReferralId,
     });
 
     if (res.data.status == 200) {
@@ -58,6 +69,7 @@ function Signup() {
       setUserFound(false);
     }
   }
+
   useEffect(() => {
     if (debouncedReferralId) {
       fetchUser();
@@ -71,70 +83,65 @@ function Signup() {
     }
   }, [referralIdParam]);
 
-  useEffect(() => {
-    const controller = new AbortController();
+  // useEffect(() => {
+  //   const controller = new AbortController();
 
-    async function fetchCountries() {
-      try {
-        const response = await axios.post(`${baseUrl}country`, null, {
-          signal: controller.signal,
-        });
-        setCountries(response.data.data);
-      } catch (error) {
-        if (error.name === "CanceledError" || error.name === "AbortError") {
-          console.log("Request aborted");
-        } else {
-          console.error("Error fetching countries:", error);
-        }
-      }
-    }
+  //   async function fetchCountries() {
+  //     try {
+  //       const response = await axios.post(`${baseUrl}country`, null, {
+  //         signal: controller.signal,
+  //       });
+  //       setCountries(response.data.data);
+  //     } catch (error) {
+  //       if (error.name === "CanceledError" || error.name === "AbortError") {
+  //         console.log("Request aborted");
+  //       } else {
+  //         console.error("Error fetching countries:", error);
+  //       }
+  //     }
+  //   }
 
-    fetchCountries();
+  //   fetchCountries();
 
-    return () => {
-      console.log("Component unmounted — canceling request");
-      controller.abort();
-    };
-  }, []);
+  //   return () => {
+  //     console.log("Component unmounted — canceling request");
+  //     controller.abort();
+  //   };
+  // }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    if (password !== passwordConfirm) {
-      alert("Password Do Not Match.");
+
+    if (!userFound) {
+      showError("User Not Found. Enter Valid Referal Wallet Address.");
       setLoading(false);
-      return;
+      return
     }
 
-    if (password.length < 6) {
-      alert("Password Length Must Be 6.");
+    try {
+      const response = await axios.post(`${baseUrl}register`, {
+        first_name: fullName,
+        sponsor_id: referralId,
+        email: email,
+        agree_terms: checked,
+      });
+
+      console.log(response.data);
+
+      if (response.data.status == 200) {
+        alert(response.data.msg);
+        navigate("/signin", { state: { details: response.data.user } });
+      } else if (response.data.status == 201) {
+        alert(response.data.msg);
+      } else {
+        alert("Registration Failed!");
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const response = await axios.post(`${baseUrl}register`, {
-      first_name: fullName,
-      sponsor_id: referralId,
-      username,
-      country,
-      phone_no: number,
-      email: email,
-      password,
-      password_confirmation: passwordConfirm,
-      agree_terms: checked,
-    });
-
-    // console.log(response.data);
-
-    if (response.data.status == 200) {
-      alert(response.data.msg);
-      navigate("/signin", { state: { details: response.data.user } });
-    } else if (response.data.status == 201) {
-      alert(response.data.msg);
-    } else {
-      alert("Registration Failed!");
-    }
-    setLoading(false);
   }
 
   return (
@@ -151,7 +158,7 @@ function Signup() {
           <div>
             <input
               type="text"
-              placeholder="Referral Id"
+              placeholder="Referral Wallet Address"
               value={referralId}
               required
               disabled={referralLocked}
@@ -161,14 +168,14 @@ function Signup() {
             {userFound && <span className="text-green-500 italic">{name}</span>}
           </div>
 
-          <input
+          {/* <input
             type="text"
             placeholder="Username"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="border border-gray-300 py-2 px-3 rounded w-full glow-focus"
-          />
+          /> */}
           <input
             type="text"
             placeholder="FullName"
@@ -177,7 +184,7 @@ function Signup() {
             onChange={(e) => setFullName(e.target.value)}
             className="border border-gray-300 py-2 px-3 rounded w-full glow-focus"
           />
-          <select
+          {/* <select
             required
             value={country}
             onChange={(e) => setCountry(e.target.value)}
@@ -189,8 +196,8 @@ function Signup() {
                 {item.name}
               </option>
             ))}
-          </select>
-          <input
+          </select> */}
+          {/* <input
             type="tel"
             placeholder="Mobile Number"
             required
@@ -203,7 +210,7 @@ function Signup() {
               }
             }}
             className="border border-gray-300 py-2 px-3 rounded w-full glow-focus"
-          />
+          /> */}
           <input
             type="email"
             placeholder="Email Address"
@@ -213,7 +220,7 @@ function Signup() {
             className="border border-gray-300 py-2 px-3 rounded w-full glow-focus"
           />
 
-          <div className="relative w-full">
+          {/* <div className="relative w-full">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
@@ -235,9 +242,9 @@ function Signup() {
                 <AiOutlineEye size={20} />
               )}
             </button>
-          </div>
+          </div> */}
 
-          <div className="relative w-full">
+          {/* <div className="relative w-full">
             <input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
@@ -259,7 +266,7 @@ function Signup() {
                 <AiOutlineEye size={20} />
               )}
             </button>
-          </div>
+          </div> */}
 
           <div className=" flex items-center gap-2">
             <input
@@ -277,7 +284,7 @@ function Signup() {
           </div>
           <button
             type="submit"
-            disabled={loading || !userFound}
+            disabled={loading}
             className="relative overflow-hidden disabled:cursor-not-allowed text-white bg-[#38C66C] font-semibold py-2 rounded cursor-pointer border border-black hover:border-amber-400 transition ease-in-out duration-300"
           >
             REGISTER NOW

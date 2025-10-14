@@ -21,7 +21,7 @@ function DetailedCards({ amount, title, children, show, balanceRoi }) {
     setTimeout(() => {
       setMsg("");
       setShowError(false);
-    }, 7000);
+    }, 2500);
   }
 
   function showSuccess(msg) {
@@ -30,7 +30,7 @@ function DetailedCards({ amount, title, children, show, balanceRoi }) {
     setTimeout(() => {
       setMsg("");
       setShowSuccess(false);
-    }, 7000);
+    }, 2500);
   }
 
   const handleSubmit = async () => {

@@ -12,7 +12,8 @@ function Delegate() {
 
   const [balance, setBalance] = useState(null);
   const [checked, setChecked] = useState(false);
-  const [userId, setUserId] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
+  const [userName, setUserName] = useState("")
   const [amount, setAmount] = useState("");
   const [platformFee, setPlatformFee] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
@@ -27,7 +28,7 @@ function Delegate() {
     setTimeout(() => {
       setMsg("");
       setShowError(false);
-    }, 7000);
+    }, 2500);
   }
 
   function showSuccess(msg) {
@@ -36,7 +37,7 @@ function Delegate() {
     setTimeout(() => {
       setMsg("");
       setShowSuccess(false);
-    }, 7000);
+    }, 2500);
   }
 
   async function handleSubmit() {
@@ -44,13 +45,13 @@ function Delegate() {
       showError("Feilds can not be empty!");
       return;
     }
-    if (!checked && userId == "") {
-      showError("UserId Feilds can not be empty!");
+    if (!checked && walletAddress == "") {
+      showError("walletAddress Feilds can not be empty!");
       return;
     }
     // console.log({
     //   user_id: user?.id,
-    //   username: !checked ? userId : user?.username,
+    //   username: !checked ? walletAddress : user?.username,
     //   pay_amount: amount,
     //   password,
     //   self: checked,
@@ -62,7 +63,7 @@ function Delegate() {
         `${baseUrl}investmentSave`,
         {
           user_id: user?.id,
-          username: !checked ? userId : user?.username,
+          wallet_address: !checked ? walletAddress : user?.wallet_address_main,
           pay_amount: amount,
           password,
           self: checked,
@@ -75,15 +76,16 @@ function Delegate() {
           },
         }
       );
-      // console.log(response);
+      console.log(response);
       if (response.data.status == 200) {
         setChecked(false);
-        setUserId("");
+        setWalletAddress("");
         setAmount("");
         setPlatformFee("");
         setTotalAmount("");
         setRemark("");
         setPassword("");
+        setUserName("")
         setRefreshed(!refreshed);
         showSuccess("Activation Successfull");
       } else {
@@ -128,6 +130,38 @@ function Delegate() {
     };
   }, [refreshed]);
 
+  useEffect(() => {
+    if (!walletAddress) {
+      return
+    }
+
+    const handler = setTimeout(async () => {
+      const res = await axios.post(
+        `${baseUrl}getuser`,
+        {
+          wallet_address: walletAddress,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // console.log(res.data)
+      if (res.data.status == 200) {
+        showSuccess("User Found.")
+        setUserName(res.data.data.first_name)
+
+      } else {
+        showError("Invalid Wallet Address")
+        setUserName("")
+      }
+    }, 500)
+
+    return () => clearTimeout(handler)
+  }, [walletAddress])
   return (
     <div className="p-4 flex-1 overflow-x-hidden flex flex-col">
       <div className="flex justify-between items-center">
@@ -175,15 +209,18 @@ function Delegate() {
               <label>Activation for Self</label>
             </div>
             {!checked && (
-              <div className="flex flex-col">
-                <span className="">Enter UserId</span>
-                <input
-                  placeholder="Enter UserId"
-                  value={userId}
-                  onChange={(e) => setUserId(e.target.value)}
-                  type="text"
-                  className="bg-[#26362C] rounded px-3 py-0.5"
-                />
+              <div>
+                <div className="flex flex-col">
+                  <span className="">Enter Wallet Address</span>
+                  <input
+                    placeholder="Enter Wallet Address"
+                    value={walletAddress}
+                    onChange={(e) => setWalletAddress(e.target.value)}
+                    type="text"
+                    className="bg-[#26362C] rounded px-3 py-0.5"
+                  />
+                </div>
+                <span className="text-green-400 font-semibold">{userName}</span>
               </div>
             )}
             <div className="flex flex-col">

@@ -39,7 +39,7 @@ function PromoPackHistory() {
     setTimeout(() => {
       setMsg("");
       setShowError(false);
-    }, 7000);
+    }, 2500);
   }
 
   function showSuccess(msg) {
@@ -48,7 +48,7 @@ function PromoPackHistory() {
     setTimeout(() => {
       setMsg("");
       setShowSuccess(false);
-    }, 7000);
+    }, 2500);
   }
 
   useEffect(() => {

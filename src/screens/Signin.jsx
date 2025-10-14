@@ -24,7 +24,7 @@ function Signin() {
     setTimeout(() => {
       setMsg("");
       setShowError(false);
-    }, 5000);
+    }, 2500);
   }
 
   function showSuccess(msg) {
@@ -33,7 +33,7 @@ function Signin() {
     setTimeout(() => {
       setMsg("");
       setShowSuccess(false);
-    }, 5000);
+    }, 2500);
   }
 
   async function handleSubmit(e) {
@@ -64,7 +64,7 @@ function Signin() {
           setMsg("");
           setShowSuccess(false);
           navigate("/dashboard");
-        }, 7000);
+        }, 2500);
         setIsConnected(true);
         setToken(response.data.token);
       } else if (response.data.status == 201) {
@@ -73,7 +73,7 @@ function Signin() {
         setTimeout(() => {
           setMsg("");
           setShowError(false);
-        }, 7000);
+        }, 2500);
       } else {
         console.log("Error", response);
       }

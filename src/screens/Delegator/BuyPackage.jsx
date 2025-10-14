@@ -85,8 +85,8 @@ function BuyPackage() {
                   `Promo-Kit: ${selectedPackage.promo_kit}`,
                 (selectedPackage.fee || selectedPackage.fee === 0) &&
                   `Validator Platform Fees: ${selectedPackage.fee}%`,
-                selectedPackage.descriptions &&
-                  `Descriptions: ${selectedPackage.descriptions}`,
+                // selectedPackage.descriptions &&
+                //   `Descriptions: ${selectedPackage.descriptions}`,
               ]
                 .filter(Boolean) // remove falsy values (undefined, null, "")
                 .map((text, index) => (

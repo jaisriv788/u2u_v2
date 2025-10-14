@@ -25,6 +25,12 @@ export const sidebarLinkData = [
         icon: GoDotFill,
         path: "/loginpassword",
       },
+      {
+        id: 23,
+        title: "Wallet Verification",
+        icon: GoDotFill,
+        path: "/walletverify",
+      },
     ],
   },
   {
@@ -226,9 +232,24 @@ export const sidebarLinkData = [
     title: "Download Pitch Deck",
     icon: FaWallet,
     subRoute: [
-      { id: 111, title: "Validator Pitchdeck", icon: GoDotFill, link: "/app/u2u.pdf" },
-      { id: 112, title: "UPhone Pitchdeck", icon: GoDotFill, link: "/app/phone.pdf" },
-      { id: 113, title: "Node Pitchdeck", icon: GoDotFill, link: "/app/node.pdf" },
+      {
+        id: 111,
+        title: "Validator Pitchdeck",
+        icon: GoDotFill,
+        link: "/app/u2u.pdf",
+      },
+      {
+        id: 112,
+        title: "UPhone Pitchdeck",
+        icon: GoDotFill,
+        link: "/app/phone.pdf",
+      },
+      {
+        id: 113,
+        title: "Node Pitchdeck",
+        icon: GoDotFill,
+        link: "/app/node.pdf",
+      },
     ],
   },
   // { id: 12, title: "Support", icon: BiSupport, path: "/support" },

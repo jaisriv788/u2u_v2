@@ -24,7 +24,7 @@ const LoginPassword = React.lazy(() =>
   import("./screens/Authentication/LoginPassword")
 );
 const TwoFA = React.lazy(() => import("./screens/TwoFA"));
-
+const WalletVerify = React.lazy(() => import("./screens/Authentication/WalletVerify"))
 //network screens
 const MyDirect = React.lazy(() => import("./screens/Network/MyDirect"));
 const TeamNetwork = React.lazy(() => import("./screens/Network/TeamNetwork"));
@@ -198,6 +198,7 @@ function App() {
             {/*authentication route*/}
             <Route path="/profile" element={<Profile />} />
             <Route path="/loginpassword" element={<LoginPassword />} />
+            <Route path="/walletverify" element={<WalletVerify />} />
             <Route path="/twofa" element={<TwoFA />} />
 
             {/*network route*/}

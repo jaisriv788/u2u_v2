@@ -5,12 +5,13 @@ import NavProfileDetail from "./NavProfileDetail";
 import { MdMenuOpen } from "react-icons/md";
 import useModalStore from "../../store/modalStore";
 import useUserStore from "../../store/userStore";
+import { useNavigate } from "react-router";
 
 function Navbar() {
   const [isProfileDetailOpen, setIsProfileDetailOpen] = useState(false);
   const { isSidebarOpen, setIsSidebarOpen } = useModalStore();
   const { user } = useUserStore();
-
+  const navigate = useNavigate()
   // console.log({ user });
 
   return (
@@ -18,6 +19,7 @@ function Navbar() {
       <div className="flex items-center sm:gap-8 md:gap-15">
         <img
           src={logoImgSrc}
+          onClick={() => navigate("/dashboard")}
           alt="icon"
           className="h-12 cursor-pointer hidden sm:flex"
         />

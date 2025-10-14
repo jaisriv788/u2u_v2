@@ -1,6 +1,6 @@
 import FooterTwo from "../../components/common/FooterTwo";
 import profileImgSrc from "../../assets/Navbar/profile.png";
-import { FaUser } from "react-icons/fa";
+import { FaCopy, FaUser, FaWallet } from "react-icons/fa";
 import { FaMobile } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import useUserStore from "../../store/userStore";
@@ -14,7 +14,7 @@ function Profile() {
     useConstStore();
 
   const [name, setName] = useState(user?.first_name);
-  const [address, setAddress] = useState(user?.wallet_address);
+  // const [address, setAddress] = useState(user?.wallet_address);
   const [U2UAddress, setU2UAddress] = useState(user?.u2u_wallet);
   const [countries, setCountries] = useState(null);
   const [country, setCountry] = useState(user?.country || "");
@@ -84,7 +84,7 @@ function Profile() {
       const formData = new FormData();
       formData.append("user_id", user?.id);
       formData.append("first_name", name);
-      formData.append("wallet_address", address);
+      // formData.append("wallet_address", address);
       formData.append("country", country);
       formData.append("u2u_wallet", U2UAddress);
       formData.append("otp", otp);
@@ -136,7 +136,7 @@ function Profile() {
   }
 
   useEffect(() => {
-    // console.log({ user });
+    console.log({ user });
     async function fetchCountries() {
       try {
         // console.log("fetching countries");
@@ -202,6 +202,16 @@ function Profile() {
                 E-Mail : <span>{user?.email}</span>
               </span>
             </div>
+            {user?.wallet_address_main && <div className="flex items-center gap-2 text-sm">
+              <FaWallet className="text-green-500" />{" "}
+              <span className="flex gap-5 xl:gap-2">
+                Wallet Address Main :
+                <span className="flex items-center gap-2">
+                  <span className="inline sm:hidden xl:inline">{user?.wallet_address_main.slice(0, 6) + "..." + user?.wallet_address_main.slice(-6)}</span>
+                  <span className="hidden sm:inline xl:hidden">{user?.wallet_address_main}</span> <FaCopy onClick={() => navigator.clipboard.writeText(user?.wallet_address_main)} className="hover:text-gray-400 cursor-pointer transition ease-in-out duration-300" />
+                </span>
+              </span>
+            </div>}
           </div>
         </div>
 
@@ -254,7 +264,7 @@ function Profile() {
                 ))}
               </select>
             </div>
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <span className="">USDT BEP-20 Address</span>
               <input
                 onChange={(e) => setAddress(e.target.value)}
@@ -262,7 +272,7 @@ function Profile() {
                 type="text"
                 className="bg-[#26362C] rounded px-3 py-0.5"
               />
-            </div>
+            </div> */}
             <div className="flex flex-col">
               <span className="">U2U Wallet</span>
               <input
@@ -308,8 +318,8 @@ function Profile() {
                   {sendingOtp
                     ? "Sending OTP..."
                     : loading
-                    ? "Please Wait.."
-                    : "Send OTP"}
+                      ? "Please Wait.."
+                      : "Send OTP"}
                 </button>
               </div>
             )}
@@ -359,8 +369,8 @@ function Profile() {
                     {sendingOtp
                       ? "Sending OTP..."
                       : loading
-                      ? "Please Wait.."
-                      : "Send OTP"}
+                        ? "Please Wait.."
+                        : "Send OTP"}
                   </button>
                 </div>
               ))}
@@ -376,7 +386,6 @@ function Profile() {
               <button
                 onClick={() => {
                   setName(user?.first_name);
-                  setAddress(user?.wallet_address);
                   setCountry(user?.country || "");
                   setImage(null);
                   setOtp("");

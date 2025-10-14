@@ -7,6 +7,7 @@ import axios from "axios";
 function Signin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loginMethod, setLoginMethod] = useState("credentials");
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const userDetails = location.state?.details;
@@ -16,6 +17,24 @@ function Signin() {
   const { setUser, setIsConnected, setToken } = useUserStore();
 
   const navigate = useNavigate();
+
+  function showError(msg) {
+    setMsg(msg);
+    setShowError(true);
+    setTimeout(() => {
+      setMsg("");
+      setShowError(false);
+    }, 5000);
+  }
+
+  function showSuccess(msg) {
+    setMsg(msg);
+    setShowSuccess(true);
+    setTimeout(() => {
+      setMsg("");
+      setShowSuccess(false);
+    }, 5000);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -37,9 +56,9 @@ function Signin() {
 
       console.log({ response });
       if (response.data.status == 200) {
-        setMsg(response.data.msg);
+        setMsg(response.data.msg); //
         setUser(response.data.user);
-        setShowSuccess(true);
+        setShowSuccess(true);//
         setScreenLoading(true);
         setTimeout(() => {
           setMsg("");
@@ -65,6 +84,74 @@ function Signin() {
     }
   }
 
+  async function loginWithWallet() {
+    if (!window.ethereum) {
+      showError("Please install MetaMask!");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      let accounts = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+
+      if (accounts.length === 0) {
+        accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+      }
+
+      // setWalletAddress(accounts[0]);
+
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0x38",
+            chainName: "Binance Smart Chain",
+            nativeCurrency: {
+              name: "BNB",
+              symbol: "BNB",
+              decimals: 18,
+            },
+            rpcUrls: ["https://bsc-dataseed.binance.org/"],
+            blockExplorerUrls: ["https://bscscan.com/"],
+          },
+        ],
+      });
+
+      const response = await axios.post(`${baseUrl}login_by_wallet`, {
+        wallet_address: accounts[0],
+      });
+      console.log({ response });
+
+      if (response.data.status == 200) {
+        showSuccess(response.data.msg);
+        setUser(response.data.user);
+        setIsConnected(true);
+        setScreenLoading(true);
+        setToken(response.data.token);
+        navigate("/dashboard");
+      } else {
+        showError(response.data.msg)
+      }
+
+    } catch (err) {
+      if (err.code === -32002) {
+        console.error(
+          "MetaMask request already pending. Please open MetaMask."
+        );
+      } else {
+        console.error("Wallet connection failed:", err);
+        showError("Wallet Connection Failed.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="bg-black min-h-screen flex justify-center items-center">
       <div className="bg-white text-black px-5 py-4 rounded-lg max-w-100">
@@ -76,13 +163,43 @@ function Signin() {
           </div>
         </div>
         {userDetails && (
-          <div className="bg-green-300/60 rounded mt-3 px-2 py-1 text-green-700">
+          <div className="bg-green-300/60 rounded my-3 px-2 py-1 text-green-700">
             <div>Registration Done Successfully</div>
             <div>User Id : {userDetails.username}</div>
             <div>Password : {userDetails.show_pass}</div>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-4">
+
+        <div className="mt-3 text-sm">
+          <span className="font-medium mr-3">Login With:</span>
+
+          <label className="inline-flex items-center mr-6 cursor-pointer">
+            <input
+              type="radio"
+              name="loginMethod"
+              value="credentials"
+              checked={loginMethod === "credentials"}
+              onChange={(e) => setLoginMethod(e.target.value)}
+              className="form-radio text-[#22b357] focus:ring-[#22b357] accent-[#22b357]"
+            />
+            <span className="ml-2">Credentials</span>
+          </label>
+
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="radio"
+              name="loginMethod"
+              value="wallet"
+              checked={loginMethod === "wallet"}
+              onChange={(e) => setLoginMethod(e.target.value)}
+              className="form-radio text-[#22b357] focus:ring-[#22b357] accent-[#22b357]"
+            />
+            <span className="ml-2">Wallet</span>
+          </label>
+        </div>
+
+
+        {loginMethod == "credentials" ? <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-4">
           <input
             type="text"
             placeholder="Username"
@@ -106,7 +223,14 @@ function Signin() {
           >
             {loading ? "Logging In..." : "LOGIN"}
           </button>
-        </form>
+        </form> : <button
+          onClick={loginWithWallet}
+          disabled={loading}
+          className="text-white bg-[#38C66C] font-semibold py-2 rounded cursor-pointer border border-black hover:border-amber-400 transition ease-in-out duration-300 w-full mt-3"
+        >
+          {loading ? "Logging In..." : "LOGIN WITH WALLET"}
+        </button>}
+
         <div className="mt-5 text-sm text-purple-800">
           <Link to="/forgetpassword" className="cursor-pointer">
             Forgot Password?

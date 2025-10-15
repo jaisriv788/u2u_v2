@@ -11,7 +11,7 @@ function Delegate() {
     useConstStore();
 
   const [balance, setBalance] = useState(null);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
   const [walletAddress, setWalletAddress] = useState("");
   const [userName, setUserName] = useState("")
   const [amount, setAmount] = useState("");
@@ -203,6 +203,7 @@ function Delegate() {
                 id="check"
                 type="checkbox"
                 checked={checked}
+                disabled
                 onChange={() => setChecked((prev) => !prev)}
                 className="toggle border-gray-600 bg-gray-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800"
               />

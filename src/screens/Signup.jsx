@@ -105,22 +105,44 @@ function Signup() {
 
         setWalletAddress(accounts[0]);
 
+        // await window.ethereum.request({
+        //   method: "wallet_addEthereumChain",
+        //   params: [
+        //     {
+        //       chainId: "0x38",
+        //       chainName: "Binance Smart Chain",
+        //       nativeCurrency: {
+        //         name: "BNB",
+        //         symbol: "BNB",
+        //         decimals: 18,
+        //       },
+        //       rpcUrls: ["https://bsc-dataseed.binance.org/"],
+        //       blockExplorerUrls: ["https://bscscan.com/"],
+        //     },
+        //   ],
+        // });
+
         await window.ethereum.request({
           method: "wallet_addEthereumChain",
           params: [
             {
-              chainId: "0x38",
-              chainName: "Binance Smart Chain",
+              chainId: "0x61",
+              chainName: "Binance Smart Chain Testnet",
               nativeCurrency: {
                 name: "BNB",
-                symbol: "BNB",
+                symbol: "tBNB", // testnet BNB
                 decimals: 18,
               },
-              rpcUrls: ["https://bsc-dataseed.binance.org/"],
-              blockExplorerUrls: ["https://bscscan.com/"],
+              rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+              blockExplorerUrls: ["https://testnet.bscscan.com/"],
             },
           ],
         });
+
+        showSuccess("Wallet Connected")
+
+
+
 
         window.ethereum.on("accountsChanged", (acc) => {
           setWalletAddress(acc[0] || null);
@@ -161,22 +183,41 @@ function Signup() {
 
       setWalletAddress(accounts[0]);
 
+      // await window.ethereum.request({
+      //   method: "wallet_addEthereumChain",
+      //   params: [
+      //     {
+      //       chainId: "0x38",
+      //       chainName: "Binance Smart Chain",
+      //       nativeCurrency: {
+      //         name: "BNB",
+      //         symbol: "BNB",
+      //         decimals: 18,
+      //       },
+      //       rpcUrls: ["https://bsc-dataseed.binance.org/"],
+      //       blockExplorerUrls: ["https://bscscan.com/"],
+      //     },
+      //   ],
+      // });
+
       await window.ethereum.request({
         method: "wallet_addEthereumChain",
         params: [
           {
-            chainId: "0x38",
-            chainName: "Binance Smart Chain",
+            chainId: "0x61",
+            chainName: "Binance Smart Chain Testnet",
             nativeCurrency: {
               name: "BNB",
-              symbol: "BNB",
+              symbol: "tBNB", // testnet BNB
               decimals: 18,
             },
-            rpcUrls: ["https://bsc-dataseed.binance.org/"],
-            blockExplorerUrls: ["https://bscscan.com/"],
+            rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+            blockExplorerUrls: ["https://testnet.bscscan.com/"],
           },
         ],
       });
+
+      showSuccess("Wallet Connected")
 
       window.ethereum.on("accountsChanged", (acc) => {
         setWalletAddress(acc[0] || null);
@@ -239,29 +280,44 @@ function Signup() {
 
     try {
 
+      const res = await axios.post(`${baseUrl}before_payment_registration`, {
+        first_name: fullName,//
+        sponsor_id: referralId,
+        wallet_address: walletAddress,//
+        email: email,
+        agree_terms: checked,
+      });
+
+      if (res.data.status != 200) {
+        showError(res.data.msg)
+        setLoading(false);
+        return
+      }
+      // console.log({ res });
+
       const web3 = new Web3(window.ethereum);
 
-      const contract = new web3.eth.Contract(ABI, usdtAddress);
+      // const contract = new web3.eth.Contract(ABI, usdtAddress);
+      const contract = new web3.eth.Contract(ABI, "0xF78A55dB9391E9B689734BA3E45c1C3A5535A857");
 
       const amount = web3.utils.toWei("55", "ether");
 
       // console.log(amount)
 
-      const tx = await contract.methods.transfer(contractAddress, amount).send({
+      const balance = await contract.methods.balanceOf(walletAddress).call();
+      console.log("Your token balance:", web3.utils.fromWei(balance, "ether"));
+
+      console.log("⏳ Waiting for user to approve the transfer in MetaMask...");
+      // const tx = await contract.methods.transfer(contractAddress, amount).send({
+      //   from: walletAddress,
+      // });
+      const tx = await contract.methods.transfer("0x15be2A2882aC8D982E9C4b1f255fFE683524772f", amount).send({
         from: walletAddress,
       });
 
-      // console.log(tx.transactionHash)
+      console.log("✅ Transaction confirmed:", tx.transactionHash);
 
-      const res = await axios.post(`${baseUrl}before_payment_registration`, {
-        name: fullName,//
-        referral_wallet_address: referralId,
-        wallet_address: walletAddress,//
-        transaction_hash: tx.transactionHash,
-        email: email,
-      });
 
-      console.log(res.data);
 
       const response = await axios.post(`${baseUrl}register`, {
         first_name: fullName,
@@ -276,22 +332,44 @@ function Signup() {
 
       if (response.data.status == 200) {
         showSuccess(response.data.msg);
-        navigate("/signin", { state: { details: response.data.user } });
+        navigate("/signin", { state: { options: "wallet" } });
       } else if (response.data.status == 201) {
         showError(response.data.msg);
       } else {
         showError("Registration Failed!");
       }
     } catch (error) {
-      console.log({ error: error.message })
-      showError("Transaction Failed.")
+      console.log({ error })
+      showError(error.response ? error.response.data.msg : "Your transaction request timed out. Please cancel the current request in MetaMask and try again.")
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="bg-black min-h-screen flex justify-center items-center">
+    <div className="bg-black px-2 min-h-screen flex justify-center items-center">
+
+      {loading && <div className=" absolute top-0 mx-2 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-xl shadow-sm mt-4">
+        <div className="flex">
+          <svg
+            className="h-6 w-6 text-yellow-400 mr-3 flex-shrink-0"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M5.07 19h13.86A2.07 2.07 0 0021 16.93V7.07A2.07 2.07 0 0018.93 5H5.07A2.07 2.07 0 003 7.07v9.86A2.07 2.07 0 005.07 19z" />
+          </svg>
+          <div>
+            <h3 className="text-yellow-800 font-semibold">Important Notice</h3>
+            <p className="text-yellow-700 text-sm mt-1">
+              Please do not close or reload this tab during the transaction process.
+              Any loss of funds resulting from interruption will be your responsibility.
+            </p>
+          </div>
+        </div>
+      </div>}
+
       <div className="bg-white text-black px-5 py-4 rounded-lg max-w-120">
         <div>
           <div className="text-xl">WELCOME TO U2U DELEGATOR REWARD PROGRAM</div>
@@ -301,6 +379,17 @@ function Signup() {
           </div>
         </div>
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-4">
+          <div>
+            <span className="text-green-500 front-semibold">Connected Wallet Address</span>
+            <input
+              type="text"
+              placeholder="Connected Wallet Address"
+              value={walletAddress ?? ""}
+              required
+              disabled
+              className="border border-gray-300 py-2 px-3 rounded w-full glow-focus"
+            />
+          </div>
           <div>
             <input
               type="text"

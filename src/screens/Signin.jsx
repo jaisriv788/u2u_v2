@@ -5,12 +5,15 @@ import useUserStore from "../store/userStore";
 import axios from "axios";
 
 function Signin() {
+  const location = useLocation();
+  const options = location.state?.options;
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginMethod, setLoginMethod] = useState("credentials");
+  const [loginMethod, setLoginMethod] = useState(options ? options : "credentials");
   const [loading, setLoading] = useState(false);
-  const location = useLocation();
-  const userDetails = location.state?.details;
+
+
 
   const { baseUrl, setMsg, setShowSuccess, setShowError, setScreenLoading } =
     useConstStore();
@@ -162,40 +165,35 @@ function Signin() {
             information by email address and password.
           </div>
         </div>
-        {userDetails && (
-          <div className="bg-green-300/60 rounded my-3 px-2 py-1 text-green-700">
-            <div>Registration Done Successfully</div>
-            <div>User Id : {userDetails.username}</div>
-            <div>Password : {userDetails.show_pass}</div>
+
+        <div className="mt-3 text-sm flex gap-3">
+          <span className="font-medium">Login With:</span>
+
+          <div className="flex gap-2">
+            <label className="inline-flex items-center cursor-pointer">
+              <input
+                type="radio"
+                name="loginMethod"
+                value="credentials"
+                checked={loginMethod === "credentials"}
+                onChange={(e) => setLoginMethod(e.target.value)}
+                className="form-radio text-[#22b357] focus:ring-[#22b357] accent-[#22b357]"
+              />
+              <span className="ml-2">Credentials</span>
+            </label>
+
+            <label className="inline-flex items-center cursor-pointer">
+              <input
+                type="radio"
+                name="loginMethod"
+                value="wallet"
+                checked={loginMethod === "wallet"}
+                onChange={(e) => setLoginMethod(e.target.value)}
+                className="form-radio text-[#22b357] focus:ring-[#22b357] accent-[#22b357]"
+              />
+              <span className="ml-2">Wallet</span>
+            </label>
           </div>
-        )}
-
-        <div className="mt-3 text-sm">
-          <span className="font-medium mr-3">Login With:</span>
-
-          <label className="inline-flex items-center mr-6 cursor-pointer">
-            <input
-              type="radio"
-              name="loginMethod"
-              value="credentials"
-              checked={loginMethod === "credentials"}
-              onChange={(e) => setLoginMethod(e.target.value)}
-              className="form-radio text-[#22b357] focus:ring-[#22b357] accent-[#22b357]"
-            />
-            <span className="ml-2">Credentials</span>
-          </label>
-
-          <label className="inline-flex items-center cursor-pointer">
-            <input
-              type="radio"
-              name="loginMethod"
-              value="wallet"
-              checked={loginMethod === "wallet"}
-              onChange={(e) => setLoginMethod(e.target.value)}
-              className="form-radio text-[#22b357] focus:ring-[#22b357] accent-[#22b357]"
-            />
-            <span className="ml-2">Wallet</span>
-          </label>
         </div>
 
 

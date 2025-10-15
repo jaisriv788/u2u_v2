@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import axios from "axios";
 import useConstStore from "../store/constStore";
-import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import Web3 from "web3";
+import ABI from "../erc20Abi.json"
+// import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
 function Signup() {
   const { referralId: referralIdParam } = useParams();
@@ -25,7 +27,7 @@ function Signup() {
   const [loading, setLoading] = useState(false);
   const [userFound, setUserFound] = useState(false);
 
-  const { baseUrl, setMsg, setShowSuccess, setShowError } = useConstStore();
+  const { baseUrl, setMsg, setShowSuccess, contractAddress, setShowError, setWalletAddress, walletAddress, usdtAddress } = useConstStore();
 
   const navigate = useNavigate();
 
@@ -83,6 +85,116 @@ function Signup() {
     }
   }, [referralIdParam]);
 
+  useEffect(() => {
+    const connectWallet = async () => {
+      if (!window.ethereum) {
+        showError("Please install MetaMask!");
+        return;
+      }
+
+      try {
+        let accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+
+        if (accounts.length === 0) {
+          accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+        }
+
+        setWalletAddress(accounts[0]);
+
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x38",
+              chainName: "Binance Smart Chain",
+              nativeCurrency: {
+                name: "BNB",
+                symbol: "BNB",
+                decimals: 18,
+              },
+              rpcUrls: ["https://bsc-dataseed.binance.org/"],
+              blockExplorerUrls: ["https://bscscan.com/"],
+            },
+          ],
+        });
+
+        window.ethereum.on("accountsChanged", (acc) => {
+          setWalletAddress(acc[0] || null);
+        });
+      } catch (err) {
+        if (err.code === -32002) {
+          console.error(
+            "MetaMask request already pending. Please open MetaMask."
+          );
+        } else {
+          console.error("Wallet connection failed:", err);
+          showError("Wallet Connection Failed.");
+        }
+      }
+    };
+
+    connectWallet();
+  }, []);
+
+  async function connectWallet() {
+    if (!window.ethereum) {
+      showError("Please install MetaMask!");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      let accounts = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+
+      if (accounts.length === 0) {
+        accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+      }
+
+      setWalletAddress(accounts[0]);
+
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0x38",
+            chainName: "Binance Smart Chain",
+            nativeCurrency: {
+              name: "BNB",
+              symbol: "BNB",
+              decimals: 18,
+            },
+            rpcUrls: ["https://bsc-dataseed.binance.org/"],
+            blockExplorerUrls: ["https://bscscan.com/"],
+          },
+        ],
+      });
+
+      window.ethereum.on("accountsChanged", (acc) => {
+        setWalletAddress(acc[0] || null);
+      });
+    } catch (err) {
+      if (err.code === -32002) {
+        console.error(
+          "MetaMask request already pending. Please open MetaMask."
+        );
+      } else {
+        console.error("Wallet connection failed:", err);
+        showError("Wallet Connection Failed.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // useEffect(() => {
   //   const controller = new AbortController();
 
@@ -119,10 +231,33 @@ function Signup() {
       return
     }
 
+    if (!window.ethereum) {
+      showError("MetaMask not found.");
+      setLoading(false);
+      return
+    }
+
     try {
+
+      const web3 = new Web3(window.ethereum);
+
+      const contract = new web3.eth.Contract(ABI, usdtAddress);
+
+      const amount = web3.utils.toWei("55", "ether");
+
+      // console.log(amount)
+
+      const tx = await contract.methods.transfer(contractAddress, amount).send({
+        from: walletAddress,
+      });
+
+      // console.log(tx.transactionHash)
+
       const response = await axios.post(`${baseUrl}register`, {
         first_name: fullName,
         sponsor_id: referralId,
+        wallet_address: walletAddress,
+        transaction_hash: tx.transactionHash,
         email: email,
         agree_terms: checked,
       });
@@ -130,15 +265,16 @@ function Signup() {
       console.log(response.data);
 
       if (response.data.status == 200) {
-        alert(response.data.msg);
+        showSuccess(response.data.msg);
         navigate("/signin", { state: { details: response.data.user } });
       } else if (response.data.status == 201) {
-        alert(response.data.msg);
+        showError(response.data.msg);
       } else {
-        alert("Registration Failed!");
+        showError("Registration Failed!");
       }
     } catch (error) {
-      console.log(error)
+      console.log({error:error.message})
+      showError("Transaction Failed.")
     } finally {
       setLoading(false);
     }
@@ -161,7 +297,7 @@ function Signup() {
               placeholder="Referral Wallet Address"
               value={referralId}
               required
-              disabled={referralLocked}
+              disabled={referralLocked || !walletAddress}
               onChange={(e) => setReferralId(e.target.value)}
               className="border border-gray-300 py-2 px-3 rounded w-full glow-focus"
             />
@@ -180,6 +316,7 @@ function Signup() {
             type="text"
             placeholder="FullName"
             required
+            disabled={!walletAddress}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             className="border border-gray-300 py-2 px-3 rounded w-full glow-focus"
@@ -215,6 +352,7 @@ function Signup() {
             type="email"
             placeholder="Email Address"
             required
+            disabled={!walletAddress}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="border border-gray-300 py-2 px-3 rounded w-full glow-focus"
@@ -275,6 +413,7 @@ function Signup() {
               type="checkbox"
               onChange={() => setChecked((prev) => !prev)}
               checked={checked}
+              disabled={!walletAddress}
               className="checkbox checkbox-sm checkbox-info"
             />
             <label htmlFor="terms" className="text-sm">
@@ -282,7 +421,7 @@ function Signup() {
               <Link className="text-purple-800">Terms and conditions</Link>
             </label>
           </div>
-          <button
+          {walletAddress ? <button
             type="submit"
             disabled={loading}
             className="relative overflow-hidden disabled:cursor-not-allowed text-white bg-[#38C66C] font-semibold py-2 rounded cursor-pointer border border-black hover:border-amber-400 transition ease-in-out duration-300"
@@ -293,7 +432,19 @@ function Signup() {
                 <span className="loading loading-spinner loading-md"></span>
               </div>
             )}
-          </button>
+          </button> : <button
+            onClick={connectWallet}
+            disabled={loading}
+            className="relative overflow-hidden disabled:cursor-not-allowed text-white bg-[#38C66C] font-semibold py-2 rounded cursor-pointer border border-black hover:border-amber-400 transition ease-in-out duration-300"
+          >
+            Connect Wallet
+            {loading && (
+              <div className="absolute bg-[#38C66C] backdrop-blur-xl inset-0 flex items-center justify-center">
+                <span className="loading loading-spinner loading-md"></span>
+              </div>
+            )}
+          </button>}
+
         </form>
         <div className="mt-5 text-sm text-purple-800">
           <span className="text-black">Already a member?</span>{" "}

@@ -105,39 +105,39 @@ function Signup() {
 
         setWalletAddress(accounts[0]);
 
-        // await window.ethereum.request({
-        //   method: "wallet_addEthereumChain",
-        //   params: [
-        //     {
-        //       chainId: "0x38",
-        //       chainName: "Binance Smart Chain",
-        //       nativeCurrency: {
-        //         name: "BNB",
-        //         symbol: "BNB",
-        //         decimals: 18,
-        //       },
-        //       rpcUrls: ["https://bsc-dataseed.binance.org/"],
-        //       blockExplorerUrls: ["https://bscscan.com/"],
-        //     },
-        //   ],
-        // });
-
         await window.ethereum.request({
           method: "wallet_addEthereumChain",
           params: [
             {
-              chainId: "0x61",
-              chainName: "Binance Smart Chain Testnet",
+              chainId: "0x38",
+              chainName: "Binance Smart Chain",
               nativeCurrency: {
                 name: "BNB",
-                symbol: "tBNB", // testnet BNB
+                symbol: "BNB",
                 decimals: 18,
               },
-              rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
-              blockExplorerUrls: ["https://testnet.bscscan.com/"],
+              rpcUrls: ["https://bsc-dataseed.binance.org/"],
+              blockExplorerUrls: ["https://bscscan.com/"],
             },
           ],
         });
+
+        // await window.ethereum.request({
+        //   method: "wallet_addEthereumChain",
+        //   params: [
+        //     {
+        //       chainId: "0x61",
+        //       chainName: "Binance Smart Chain Testnet",
+        //       nativeCurrency: {
+        //         name: "BNB",
+        //         symbol: "tBNB", // testnet BNB
+        //         decimals: 18,
+        //       },
+        //       rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+        //       blockExplorerUrls: ["https://testnet.bscscan.com/"],
+        //     },
+        //   ],
+        // });
 
         showSuccess("Wallet Connected")
 
@@ -183,39 +183,39 @@ function Signup() {
 
       setWalletAddress(accounts[0]);
 
-      // await window.ethereum.request({
-      //   method: "wallet_addEthereumChain",
-      //   params: [
-      //     {
-      //       chainId: "0x38",
-      //       chainName: "Binance Smart Chain",
-      //       nativeCurrency: {
-      //         name: "BNB",
-      //         symbol: "BNB",
-      //         decimals: 18,
-      //       },
-      //       rpcUrls: ["https://bsc-dataseed.binance.org/"],
-      //       blockExplorerUrls: ["https://bscscan.com/"],
-      //     },
-      //   ],
-      // });
-
       await window.ethereum.request({
         method: "wallet_addEthereumChain",
         params: [
           {
-            chainId: "0x61",
-            chainName: "Binance Smart Chain Testnet",
+            chainId: "0x38",
+            chainName: "Binance Smart Chain",
             nativeCurrency: {
               name: "BNB",
-              symbol: "tBNB", // testnet BNB
+              symbol: "BNB",
               decimals: 18,
             },
-            rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
-            blockExplorerUrls: ["https://testnet.bscscan.com/"],
+            rpcUrls: ["https://bsc-dataseed.binance.org/"],
+            blockExplorerUrls: ["https://bscscan.com/"],
           },
         ],
       });
+
+      // await window.ethereum.request({
+      //   method: "wallet_addEthereumChain",
+      //   params: [
+      //     {
+      //       chainId: "0x61",
+      //       chainName: "Binance Smart Chain Testnet",
+      //       nativeCurrency: {
+      //         name: "BNB",
+      //         symbol: "tBNB", // testnet BNB
+      //         decimals: 18,
+      //       },
+      //       rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+      //       blockExplorerUrls: ["https://testnet.bscscan.com/"],
+      //     },
+      //   ],
+      // });
 
       showSuccess("Wallet Connected")
 
@@ -297,8 +297,8 @@ function Signup() {
 
       const web3 = new Web3(window.ethereum);
 
-      // const contract = new web3.eth.Contract(ABI, usdtAddress);
-      const contract = new web3.eth.Contract(ABI, "0xF78A55dB9391E9B689734BA3E45c1C3A5535A857");
+      const contract = new web3.eth.Contract(ABI, usdtAddress);
+      // const contract = new web3.eth.Contract(ABI, "0xF78A55dB9391E9B689734BA3E45c1C3A5535A857");
 
       const amount = web3.utils.toWei("55", "ether");
 
@@ -308,12 +308,12 @@ function Signup() {
       console.log("Your token balance:", web3.utils.fromWei(balance, "ether"));
 
       console.log("⏳ Waiting for user to approve the transfer in MetaMask...");
-      // const tx = await contract.methods.transfer(contractAddress, amount).send({
-      //   from: walletAddress,
-      // });
-      const tx = await contract.methods.transfer("0x15be2A2882aC8D982E9C4b1f255fFE683524772f", amount).send({
+      const tx = await contract.methods.transfer(contractAddress, amount).send({
         from: walletAddress,
       });
+      // const tx = await contract.methods.transfer("0x15be2A2882aC8D982E9C4b1f255fFE683524772f", amount).send({
+      //   from: walletAddress,
+      // });
 
       console.log("✅ Transaction confirmed:", tx.transactionHash);
 

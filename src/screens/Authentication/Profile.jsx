@@ -187,13 +187,13 @@ function Profile() {
             <div className="flex items-center gap-2 text-sm">
               <FaUser className="text-green-500" />{" "}
               <span className="flex gap-5 xl:gap-2">
-                Full Name : <span>{user?.username}</span>
+                Full Name : <span>{user?.first_name}</span>
               </span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <FaMobile className="text-green-500" />{" "}
               <span className="flex gap-5 xl:gap-2">
-                Mobile :<span> {user?.phone_no}</span>
+                Mobile :<span> {user?.phone_no ? user?.phone_no : "-"}</span>
               </span>
             </div>
             <div className="flex items-center gap-2 text-sm">

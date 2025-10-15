@@ -33,6 +33,7 @@ function Dashboard() {
     setScreenLoading(true);
     const fetchUserData = async () => {
       if (user && isConnected) {
+        console.log({ baseUrl, user_id: typeof user?.id, token })
         try {
           const [dashboardRes, generalRes] = await Promise.all([
             axios.post(
@@ -53,6 +54,7 @@ function Dashboard() {
             }),
           ]);
 
+          console.log({ dashboardRes, generalRes })
           // Handle dashboard response
           if (dashboardRes.data.status === 200) {
             setDashBoardData(dashboardRes.data.data);

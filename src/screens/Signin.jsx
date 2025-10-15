@@ -125,7 +125,7 @@ function Signin() {
       const response = await axios.post(`${baseUrl}login_by_wallet`, {
         wallet_address: accounts[0],
       });
-      console.log({ response });
+      console.log({ response, account: accounts[0] });
 
       if (response.data.status == 200) {
         showSuccess(response.data.msg);

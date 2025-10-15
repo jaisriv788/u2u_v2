@@ -253,6 +253,16 @@ function Signup() {
 
       // console.log(tx.transactionHash)
 
+      const res = await axios.post(`${baseUrl}before_payment_registration`, {
+        name: fullName,//
+        referral_wallet_address: referralId,
+        wallet_address: walletAddress,//
+        transaction_hash: tx.transactionHash,
+        email: email,
+      });
+
+      console.log(res.data);
+
       const response = await axios.post(`${baseUrl}register`, {
         first_name: fullName,
         sponsor_id: referralId,
@@ -273,7 +283,7 @@ function Signup() {
         showError("Registration Failed!");
       }
     } catch (error) {
-      console.log({error:error.message})
+      console.log({ error: error.message })
       showError("Transaction Failed.")
     } finally {
       setLoading(false);

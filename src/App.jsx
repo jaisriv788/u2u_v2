@@ -176,7 +176,7 @@ function App() {
           <span>{msg}</span>
         </div>
       )}
-      <Suspense fallback={<Loader />}>
+      {/* <Suspense fallback={<Loader />}> */}
         <Routes>
           {/*public route*/}
           <Route element={<PublicRoute />}>
@@ -246,7 +246,7 @@ function App() {
           </Route>
           <Route path="*" element={<PNF />} />
         </Routes>
-      </Suspense>
+      {/* </Suspense> */}
     </>
   );
 }

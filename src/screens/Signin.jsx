@@ -8,9 +8,10 @@ function Signin() {
   const location = useLocation();
   const options = location.state?.options;
 
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginMethod, setLoginMethod] = useState(options ? options : "credentials");
+  const [loginMethod, setLoginMethod] = useState(options ? options : localStorage.getItem("method") ? localStorage.getItem("method") : "credentials");
   const [loading, setLoading] = useState(false);
 
 
@@ -176,7 +177,7 @@ function Signin() {
                 name="loginMethod"
                 value="credentials"
                 checked={loginMethod === "credentials"}
-                onChange={(e) => setLoginMethod(e.target.value)}
+                onChange={(e) => { setLoginMethod(e.target.value); localStorage.setItem("method", "credentials") }}
                 className="form-radio text-[#22b357] focus:ring-[#22b357] accent-[#22b357]"
               />
               <span className="ml-2">Credentials</span>
@@ -188,7 +189,7 @@ function Signin() {
                 name="loginMethod"
                 value="wallet"
                 checked={loginMethod === "wallet"}
-                onChange={(e) => setLoginMethod(e.target.value)}
+                onChange={(e) => { setLoginMethod(e.target.value); localStorage.setItem("method", "wallet") }}
                 className="form-radio text-[#22b357] focus:ring-[#22b357] accent-[#22b357]"
               />
               <span className="ml-2">Wallet</span>

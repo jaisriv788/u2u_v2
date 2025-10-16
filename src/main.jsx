@@ -6,7 +6,7 @@ import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter basename="/u2u_global_react/">
+    <BrowserRouter basename="/u2u_global_react/app/">
       <App />
     </BrowserRouter>
   </StrictMode>

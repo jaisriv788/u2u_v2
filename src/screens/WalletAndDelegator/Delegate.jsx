@@ -78,7 +78,7 @@ function Delegate() {
       );
       console.log(response);
       if (response.data.status == 200) {
-        setChecked(false);
+        // setChecked(false);
         setWalletAddress("");
         setAmount("");
         setPlatformFee("");

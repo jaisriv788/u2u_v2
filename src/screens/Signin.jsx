@@ -11,6 +11,7 @@ function Signin() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  // const [wallet, setWallet] = useState("")
   const [loginMethod, setLoginMethod] = useState(options ? options : localStorage.getItem("method") ? localStorage.getItem("method") : "credentials");
   const [loading, setLoading] = useState(false);
 
@@ -107,7 +108,7 @@ function Signin() {
         });
       }
 
-      // setWalletAddress(accounts[0]);
+      // setWallet(accounts[0]);
 
       await window.ethereum.request({
         method: "wallet_addEthereumChain",
@@ -230,6 +231,7 @@ function Signin() {
           {loading ? "Logging In..." : "LOGIN WITH WALLET"}
         </button>}
 
+        {/* {loginMethod == "wallet" && <span className="">{wallet}</span>} */}
         <div className="mt-5 text-sm text-purple-800">
           <Link to="/forgetpassword" className="cursor-pointer">
             Forgot Password?

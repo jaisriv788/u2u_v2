@@ -22,6 +22,18 @@ const useUserStore = create(
       {
         name: "user-storage",
         getStorage: () => sessionStorage,
+        version: 2,
+        migrate: (persistedState, version) => {
+          if (version < 2) {
+            return {
+              ...persistedState,
+              user: null,
+              token: null,
+              isConnected: false,
+            };
+          }
+          return persistedState;
+        },
       }
     ),
     { name: "UserStore" }

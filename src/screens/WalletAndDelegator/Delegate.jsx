@@ -18,7 +18,7 @@ function Delegate() {
   const [platformFee, setPlatformFee] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
   const [remark, setRemark] = useState("");
-  // const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [refreshed, setRefreshed] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -73,6 +73,7 @@ function Delegate() {
           pay_amount: amount,
           self: checked,
           remark,
+          password
         },
         {
           headers: {
@@ -167,6 +168,7 @@ function Delegate() {
 
     return () => clearTimeout(handler)
   }, [walletAddress])
+
   return (
     <div className="p-4 flex-1 overflow-x-hidden flex flex-col">
       <div className="flex justify-between items-center">
@@ -277,7 +279,7 @@ function Delegate() {
                 className="bg-[#26362C] rounded px-3 py-0.5"
               />
             </div>
-            {/* <div className="flex flex-col">
+            <div className="flex flex-col">
               <span className="">Password</span>
               <input
                 placeholder="Password"
@@ -286,7 +288,7 @@ function Delegate() {
                 type="password"
                 className="bg-[#26362C] rounded px-3 py-0.5"
               />
-            </div> */}
+            </div>
 
             <div className="flex gap-5 mt-5">
               <button

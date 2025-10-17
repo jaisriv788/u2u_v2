@@ -5,8 +5,8 @@ const useConstStore = create(
   devtools(
     persist(
       (set) => ({
-        // baseUrl: "https://u2uglobal.xyz/superadmin/api/",
-        baseUrl: "https://worldofsoftware.in/u2u_global/api/",
+        baseUrl: "https://u2uglobal.xyz/superadmin/api/",
+        // baseUrl: "https://worldofsoftware.in/u2u_global/api/",
         usdtAddress: "0x55d398326f99059fF775485246999027B3197955",
         contractAddress: "0xb92cbb7830B2cd93aa72572Eb36591d6D770981b",
         walletAddress: null,
@@ -30,8 +30,8 @@ const useConstStore = create(
           if (version < 13) {
             return {
               ...persistedState,
-              // baseUrl: "https://u2uglobal.xyz/superadmin/api/",
-              baseUrl: "https://worldofsoftware.in/u2u_global/api/"
+              baseUrl: "https://u2uglobal.xyz/superadmin/api/",
+              // baseUrl: "https://worldofsoftware.in/u2u_global/api/"
             };
           }
           return persistedState;

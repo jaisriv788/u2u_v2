@@ -41,6 +41,12 @@ function Delegate() {
   }
 
   async function handleSubmit() {
+    // console.log({ user })
+    // return
+    if (!user.wallet_address_main) {
+      showError("Please Verify Your Wallet Address.");
+      return;
+    }
     if (amount == "" || password == "" || remark == "") {
       showError("Feilds can not be empty!");
       return;

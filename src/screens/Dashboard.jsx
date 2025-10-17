@@ -26,6 +26,8 @@ function Dashboard() {
   const { dashboardData, setDashBoardData } = useDashboardStore();
 
   const [showModal, setShowModal] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
+  const [banner, setBanner] = useState(null)
   const [title, setTitle] = useState("");
   const [msg, setMsg] = useState("");
 
@@ -33,7 +35,7 @@ function Dashboard() {
     setScreenLoading(true);
     const fetchUserData = async () => {
       if (user && isConnected) {
-        console.log({ baseUrl, user_id: typeof user?.id, token })
+        // console.log({ baseUrl, user_id: typeof user?.id, token })
         try {
           const [dashboardRes, generalRes] = await Promise.all([
             axios.post(
@@ -54,7 +56,7 @@ function Dashboard() {
             }),
           ]);
 
-          console.log({ dashboardRes, generalRes })
+          // console.log({ dashboardRes, generalRes })
           // Handle dashboard response
           if (dashboardRes.data.status === 200) {
             setDashBoardData(dashboardRes.data.data);
@@ -66,6 +68,10 @@ function Dashboard() {
               setShowModal(true);
               setTitle(generalRes.data.data.popup_title);
               setMsg(generalRes.data.data.popup_message.split("\n"));
+            }
+            if (generalRes.data.data.banner_popup_status == "enable") {
+              setShowBanner(true)
+              setBanner(generalRes.data.data.banner_popup)
             }
           }
         } catch (error) {
@@ -192,6 +198,32 @@ function Dashboard() {
           </div>
         </div>
       )}
+      {showBanner && <div className="fixed z-30 bg-black/70 inset-0 pt-2">
+        <div className="w-full max-w-md sm:max-w-lg mx-auto bg-gradient-to-br from-[#0D1B2A] to-[#09182C] text-gray-200 shadow-xl rounded-2xl p-5 sm:p-6 border border-gray-700">
+          {/* Heading */}
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-2 h-7 bg-emerald-500 rounded-full"></div>
+            <h2 className="text-lg sm:text-xl font-semibold text-white">
+              Banner
+            </h2>
+          </div>
+
+          {/* Message */}
+          <div className="flex justify-center">
+            <img className="max-w-fit w-100" src={banner} />
+          </div>
+
+          {/* Button */}
+          <div className="flex justify-end">
+            <button
+              onClick={() => setShowBanner(false)}
+              className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-md cursor-pointer transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>}
       {/* <Marquee /> */}
       <Intro />
       <Suspense fallback={<Loader />}>

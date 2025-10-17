@@ -59,7 +59,7 @@ function Signin() {
         password: password,
       });
 
-      console.log({ response });
+      // console.log({ response });
       if (response.data.status == 200) {
         setMsg(response.data.msg); //
         setUser(response.data.user);

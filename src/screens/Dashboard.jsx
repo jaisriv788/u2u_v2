@@ -56,7 +56,7 @@ function Dashboard() {
             }),
           ]);
 
-          // console.log({ dashboardRes, generalRes })
+          console.log({ dashboardRes, generalRes })
           // Handle dashboard response
           if (dashboardRes.data.status === 200) {
             setDashBoardData(dashboardRes.data.data);
@@ -199,22 +199,22 @@ function Dashboard() {
         </div>
       )}
       {showBanner && <div className="fixed z-30 bg-black/70 inset-0 pt-2">
-        <div className="w-full max-w-md sm:max-w-lg mx-auto bg-gradient-to-br from-[#0D1B2A] to-[#09182C] text-gray-200 shadow-xl rounded-2xl p-5 sm:p-6 border border-gray-700">
+        <div className="w-full max-w-lg sm:max-w-xl mx-auto bg-gradient-to-br from-[#0D1B2A] to-[#09182C] text-gray-200 shadow-xl rounded-2xl p-5 sm:p-6 border border-gray-700">
           {/* Heading */}
-          <div className="flex items-center gap-2 mb-4">
+          {/* <div className="flex items-center gap-2 mb-4">
             <div className="w-2 h-7 bg-emerald-500 rounded-full"></div>
             <h2 className="text-lg sm:text-xl font-semibold text-white">
               Banner
             </h2>
-          </div>
+          </div> */}
 
           {/* Message */}
           <div className="flex justify-center">
-            <img className="max-w-fit w-100" src={banner} />
+            <img className="max-w-full " src={banner} />
           </div>
 
           {/* Button */}
-          <div className="flex justify-end">
+          <div className="flex justify-end mt-2">
             <button
               onClick={() => setShowBanner(false)}
               className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-md cursor-pointer transition"

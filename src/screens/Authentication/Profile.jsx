@@ -205,7 +205,7 @@ function Profile() {
             {user?.wallet_address_main && <div className="flex items-center gap-2 text-sm">
               <FaWallet className="text-green-500" />{" "}
               <span className="flex gap-5 xl:gap-2">
-                Wallet Address Main :
+                Wallet Address :
                 <span className="flex items-center gap-2">
                   <span className="inline sm:hidden xl:inline">{user?.wallet_address_main.slice(0, 6) + "..." + user?.wallet_address_main.slice(-6)}</span>
                   <span className="hidden sm:inline xl:hidden">{user?.wallet_address_main}</span> <FaCopy onClick={() => navigator.clipboard.writeText(user?.wallet_address_main)} className="hover:text-gray-400 cursor-pointer transition ease-in-out duration-300" />

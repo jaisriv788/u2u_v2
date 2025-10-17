@@ -15,5 +15,5 @@ export default defineConfig({
       filename: "bundle-analysis.html",
     }),
   ],
-  base: "/u2u_global_react/app/",
+  base: "/app/",
 });

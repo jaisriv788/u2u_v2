@@ -18,7 +18,7 @@ function Delegate() {
   const [platformFee, setPlatformFee] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
   const [remark, setRemark] = useState("");
-  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState("");
   const [refreshed, setRefreshed] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +47,7 @@ function Delegate() {
       showError("Please Verify Your Wallet Address.");
       return;
     }
-    if (amount == "" || password == "" || remark == "") {
+    if (amount == "" || remark == "") {
       showError("Feilds can not be empty!");
       return;
     }
@@ -71,7 +71,6 @@ function Delegate() {
           user_id: user?.id,
           wallet_address: !checked ? walletAddress : user?.wallet_address_main,
           pay_amount: amount,
-          password,
           self: checked,
           remark,
         },
@@ -90,7 +89,7 @@ function Delegate() {
         setPlatformFee("");
         setTotalAmount("");
         setRemark("");
-        setPassword("");
+        // setPassword("");
         setUserName("")
         setRefreshed(!refreshed);
         showSuccess("Activation Successfull");
@@ -278,7 +277,7 @@ function Delegate() {
                 className="bg-[#26362C] rounded px-3 py-0.5"
               />
             </div>
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <span className="">Password</span>
               <input
                 placeholder="Password"
@@ -287,7 +286,7 @@ function Delegate() {
                 type="password"
                 className="bg-[#26362C] rounded px-3 py-0.5"
               />
-            </div>
+            </div> */}
 
             <div className="flex gap-5 mt-5">
               <button
@@ -297,12 +296,12 @@ function Delegate() {
               >
                 {loading ? "Activating..." : "Submit"}
               </button>
-              <button
+              {/* <button
                 disabled={loading}
                 className="bg-gray-500 hover:bg-gray-400 transition ease-in-out duration-300 cursor-pointer px-3 py-0.5 rounded w-fit mt-3"
               >
                 Cancel
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

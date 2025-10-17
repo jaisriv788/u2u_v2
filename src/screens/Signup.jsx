@@ -300,7 +300,7 @@ function Signup() {
       const contract = new web3.eth.Contract(ABI, usdtAddress);
       // const contract = new web3.eth.Contract(ABI, "0xF78A55dB9391E9B689734BA3E45c1C3A5535A857");
 
-      const amount = web3.utils.toWei("55", "ether");
+      const amount = web3.utils.toWei("1", "ether");
 
       // console.log(amount)
 
